@@ -4,5 +4,20 @@ services:
       context: .
     ports:
       - '8000:8000'
+    volumes:
+      - ./quizapp:/quizapp
     command: >
       sh -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
+    depends_on:
+      - database
+    env_file:
+      - .env
+  database:
+    restart: always
+    image: postgres:14.6-alpine
+    ports:
+      - '5432'
+    volumes:
+      - ./.db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
